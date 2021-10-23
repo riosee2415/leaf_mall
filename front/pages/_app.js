@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import wrapper from "../store/configureStore";
+import GlobalStyles from "../components/globalStyles";
 
 const App = ({ Component }) => {
   return (
@@ -25,6 +26,7 @@ const App = ({ Component }) => {
         <meta property="og:image:width" content="800" />
         <meta property="og:image:height" content="400" />
       </Head>
+      <GlobalStyles />
 
       <Component />
     </>

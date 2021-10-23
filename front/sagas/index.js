@@ -5,7 +5,7 @@ import productTypeSaga from "./productType";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
-axios.defaults.url = "http://localhost:4000";
+axios.defaults.baseURL = "http://localhost:4000";
 
 export default function* rootSaga() {
   yield all([
