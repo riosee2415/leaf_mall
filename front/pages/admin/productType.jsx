@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 import AdminLayout from "../../components/AdminLayout";
 import AdminTitle from "../../components/AdminTitle";
@@ -7,7 +7,7 @@ import {
   CREATE_MODAL_TOGGLE,
   PRODUCT_TYPE_REQUEST,
 } from "../../reducers/productType";
-import { Button, Table, Modal } from "antd";
+import { Button, Table, Modal, Form, Input } from "antd";
 
 const BtnWrapper = styled.div`
   width: 100%;
@@ -31,6 +31,9 @@ const ProductType = () => {
   const { types, createModal } = useSelector((state) => state.productType);
   const dispatch = useDispatch();
 
+  const [cForm] = Form.useForm();
+  const cFromRef = useRef();
+
   useEffect(() => {
     dispatch({
       type: PRODUCT_TYPE_REQUEST,
@@ -42,6 +45,10 @@ const ProductType = () => {
       type: CREATE_MODAL_TOGGLE,
     });
   }, [createModal]);
+
+  const formFinishHandler = useCallback((data) => {
+    console.log(data);
+  }, []);
 
   const columns = [
     {
@@ -105,7 +112,23 @@ const ProductType = () => {
         footer={null}
         onCancel={createModalHandler}
       >
-        <h2>Hello Modal</h2>
+        <Form
+          ref={cFromRef}
+          form={cForm}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
+          onFinish={formFinishHandler}
+        >
+          <Form.Item label="유형명" name="typeName">
+            <Input allowClear={true} />
+          </Form.Item>
+
+          <BtnWrapper>
+            <Button size="small" type="primary" htmlType="submit">
+              생성
+            </Button>
+          </BtnWrapper>
+        </Form>
       </Modal>
     </AdminLayout>
   );
