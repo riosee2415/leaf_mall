@@ -6,8 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   CREATE_MODAL_TOGGLE,
   PRODUCT_TYPE_REQUEST,
+  PRODUCT_TYPE_CREATE_REQUEST,
 } from "../../reducers/productType";
-import { Button, Table, Modal, Form, Input } from "antd";
+import { Button, Table, Modal, Form, Input, message } from "antd";
 
 const BtnWrapper = styled.div`
   width: 100%;
@@ -28,17 +29,28 @@ const ContentWrapper = styled.div`
 `;
 
 const ProductType = () => {
-  const { types, createModal } = useSelector((state) => state.productType);
+  const { types, createModal, st_typeCreateDone } = useSelector(
+    (state) => state.productType
+  );
   const dispatch = useDispatch();
 
   const [cForm] = Form.useForm();
-  const cFromRef = useRef();
+  const cFormRef = useRef();
 
   useEffect(() => {
     dispatch({
       type: PRODUCT_TYPE_REQUEST,
     });
   }, []);
+
+  useEffect(() => {
+    if (st_typeCreateDone) {
+      message.success("새로운 상품유형이 등록되었습니다.");
+      dispatch({
+        type: PRODUCT_TYPE_REQUEST,
+      });
+    }
+  }, [st_typeCreateDone]);
 
   const createModalHandler = useCallback(() => {
     dispatch({
@@ -47,7 +59,10 @@ const ProductType = () => {
   }, [createModal]);
 
   const formFinishHandler = useCallback((data) => {
-    console.log(data);
+    dispatch({
+      type: PRODUCT_TYPE_CREATE_REQUEST,
+      data: data,
+    });
   }, []);
 
   const columns = [
@@ -113,7 +128,7 @@ const ProductType = () => {
         onCancel={createModalHandler}
       >
         <Form
-          ref={cFromRef}
+          ref={cFormRef}
           form={cForm}
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 20 }}
