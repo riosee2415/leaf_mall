@@ -1,10 +1,11 @@
 import React from "react";
 import AdminLayout from "../../components/AdminLayout";
+import AdminTitle from "../../components/AdminTitle";
 
 const Product = () => {
   return (
     <AdminLayout>
-      <div> ADMIN Product</div>
+      <AdminTitle title="상품 관리" />
     </AdminLayout>
   );
 };

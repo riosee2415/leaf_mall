@@ -26,6 +26,6 @@ module.exports = class ProductType extends Model {
   }
 
   static associate(db) {
-    // db.ProductType.hasMany(db.Product);
+    db.ProductType.hasMany(db.Product);
   }
 };

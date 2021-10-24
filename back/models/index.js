@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 
 const ProductType = require("./producttype");
+const product = require("./product");
 
 const env = process.env.NODE_ENV || "development";
 const config = require("../config/config")[env];
@@ -15,6 +16,7 @@ const sequelize = new Sequelize(
 );
 
 db.ProductType = ProductType;
+db.Product = product;
 
 Object.keys(db).forEach((modelName) => {
   db[modelName].init(sequelize);
