@@ -2,6 +2,7 @@ import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
 import user from "./user";
 import productType from "./productType";
+import product from "./product";
 
 const rootReducer = (state, action) => {
   switch (action.type) {
@@ -12,6 +13,7 @@ const rootReducer = (state, action) => {
       const combinedReducer = combineReducers({
         user,
         productType,
+        product,
       });
       return combinedReducer(state, action);
     }

@@ -10,6 +10,7 @@ const session = require("express-session");
 const db = require("./models");
 
 const productTypeRouter = require("./routers/productTypeRouter");
+const productRouter = require("./routers/productRouter");
 
 db.sequelize
   .sync()
@@ -63,6 +64,7 @@ app.get("/", (req, res, next) => {
 });
 
 app.use("/api/productType", productTypeRouter);
+app.use("/api/product", productRouter);
 
 app.listen(PORT, () => {
   console.log(`🍀 http://localhost:${PORT} Web Express Server Start`);
