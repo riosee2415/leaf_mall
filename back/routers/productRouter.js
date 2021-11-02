@@ -39,4 +39,20 @@ router.get("/list/:typeId", async (req, res, next) => {
   }
 });
 
+router.patch("/update/top", async (req, res, next) => {
+  const { id, nextTop } = req.body;
+
+  try {
+    const resultUpdate = await Product.update(
+      { isTop: Boolean(nextTop) },
+      { where: { id: parseInt(id) } }
+    );
+
+    return res.status(200).json({ result: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(401).send("데이터를 제어할 수 없습니다.");
+  }
+});
+
 module.exports = router;

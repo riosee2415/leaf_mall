@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import AdminLayout from "../../components/AdminLayout";
 import AdminTitle from "../../components/AdminTitle";
-import { Button, Switch, Table } from "antd";
+import { Button, message, Switch, Table } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { PRODUCT_TYPE_REQUEST } from "../../reducers/productType";
-import { PRODUCT_LIST_REQUEST } from "../../reducers/product";
+import {
+  PRODUCT_LIST_REQUEST,
+  PRODUCT_TOP_TOGGLE_REQUEST,
+} from "../../reducers/product";
 import styled from "styled-components";
 
 const SearchBtnWrapper = styled.div`
@@ -28,10 +31,25 @@ const Product = () => {
   const [selectType, setSelectType] = useState(null);
 
   const { types } = useSelector((state) => state.productType);
-  const { products } = useSelector((state) => state.product);
+  const { products, st_productTopToggleDone } = useSelector(
+    (state) => state.product
+  );
   const dispatch = useDispatch();
 
-  console.log(products);
+  useEffect(() => {
+    if (st_productTopToggleDone) {
+      message.success("상품 노출정보가 변경되었습니다.");
+
+      dispatch({
+        type: PRODUCT_TYPE_REQUEST,
+      });
+
+      dispatch({
+        type: PRODUCT_LIST_REQUEST,
+        data: { typeId: selectType },
+      });
+    }
+  }, [st_productTopToggleDone]);
 
   useEffect(() => {
     dispatch({
@@ -58,6 +76,19 @@ const Product = () => {
     [selectType]
   );
 
+  const isTopClickHandler = useCallback((data) => {
+    const currentId = data.id;
+    const nextIsTop = !data.isTop;
+
+    dispatch({
+      type: PRODUCT_TOP_TOGGLE_REQUEST,
+      data: {
+        id: currentId,
+        nextTop: nextIsTop,
+      },
+    });
+  });
+
   const th = [
     {
       title: "번호",
@@ -81,11 +112,22 @@ const Product = () => {
     },
     {
       title: "할인율",
-      dataIndex: "discount",
+      render: (data) => <div>{data.discount}%</div>,
+    },
+    {
+      title: "최종판매가",
+      render: (data) => (
+        <div>{data.price - (data.price / 100) * data.discount}원</div>
+      ),
     },
     {
       title: "상위노출",
-      render: (data) => <Switch defaultChecked={data.isTop} />,
+      render: (data) => (
+        <Switch
+          onChange={() => isTopClickHandler(data)}
+          defaultChecked={data.isTop}
+        />
+      ),
     },
   ];
 
