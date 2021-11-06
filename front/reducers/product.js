@@ -2,6 +2,8 @@ import produce from "immer";
 
 export const initailState = {
   products: [],
+  createModal: false,
+  previewTh: null,
   //
   st_productListLoading: false,
   st_productListDone: false,
@@ -10,6 +12,10 @@ export const initailState = {
   st_productTopToggleLoading: false,
   st_productTopToggleDone: false,
   st_productTopToggleError: null,
+  //
+  st_productThumbnailLoading: false,
+  st_productThumbnailDone: false,
+  st_productThumbnailError: null,
 };
 
 export const PRODUCT_LIST_REQUEST = "PRODUCT_LIST_REQUEST";
@@ -19,6 +25,12 @@ export const PRODUCT_LIST_FAILURE = "PRODUCT_LIST_FAILURE";
 export const PRODUCT_TOP_TOGGLE_REQUEST = "PRODUCT_TOP_TOGGLE_REQUEST";
 export const PRODUCT_TOP_TOGGLE_SUCCESS = "PRODUCT_TOP_TOGGLE_SUCCESS";
 export const PRODUCT_TOP_TOGGLE_FAILURE = "PRODUCT_TOP_TOGGLE_FAILURE";
+
+export const PRODUCT_THUMBNAIL_REQUEST = "PRODUCT_THUMBNAIL_REQUEST";
+export const PRODUCT_THUMBNAIL_SUCCESS = "PRODUCT_THUMBNAIL_SUCCESS";
+export const PRODUCT_THUMBNAIL_FAILURE = "PRODUCT_THUMBNAIL_FAILURE";
+
+export const CREATE_MODAL_TOGGLE = "CREATE_MODAL_TOGGLE";
 
 const reducer = (state = initailState, action) =>
   produce(state, (draft) => {
@@ -61,8 +73,32 @@ const reducer = (state = initailState, action) =>
         draft.st_productTopToggleDone = false;
         draft.st_productTopToggleError = action.data;
         break;
+      ////////
+
+      case PRODUCT_THUMBNAIL_REQUEST:
+        draft.st_productThumbnailLoading = true;
+        draft.st_productThumbnailDone = false;
+        draft.st_productThumbnailError = null;
+        break;
+
+      case PRODUCT_THUMBNAIL_SUCCESS:
+        draft.st_productThumbnailLoading = false;
+        draft.st_productThumbnailDone = true;
+        draft.st_productThumbnailError = null;
+        draft.previewTh = action.data.path;
+        break;
+
+      case PRODUCT_THUMBNAIL_FAILURE:
+        draft.st_productThumbnailLoading = false;
+        draft.st_productThumbnailDone = false;
+        draft.st_productThumbnailError = action.data;
+        break;
 
       ////////
+
+      case CREATE_MODAL_TOGGLE:
+        draft.createModal = !draft.createModal;
+        break;
 
       default:
         break;

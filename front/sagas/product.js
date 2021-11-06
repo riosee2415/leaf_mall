@@ -9,6 +9,10 @@ import {
   PRODUCT_TOP_TOGGLE_REQUEST,
   PRODUCT_TOP_TOGGLE_SUCCESS,
   PRODUCT_TOP_TOGGLE_FAILURE,
+  //
+  PRODUCT_THUMBNAIL_REQUEST,
+  PRODUCT_THUMBNAIL_SUCCESS,
+  PRODUCT_THUMBNAIL_FAILURE,
 } from "../reducers/product";
 
 // SAGA AREA ********************************************************************************************************
@@ -61,6 +65,31 @@ function* productTopToggle(action) {
 // ******************************************************************************************************************
 // ******************************************************************************************************************
 
+// SAGA AREA ********************************************************************************************************
+// ******************************************************************************************************************
+function productThumbnailAPI(data) {
+  return axios.post(`/api/product/image`, data);
+}
+
+function* productThumbnail(action) {
+  try {
+    const result = yield call(productThumbnailAPI, action.data);
+    yield put({
+      type: PRODUCT_THUMBNAIL_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: PRODUCT_THUMBNAIL_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+// ******************************************************************************************************************
+// ******************************************************************************************************************
+
 //////////////////////////////////////////////////////////////
 
 function* watchProductList() {
@@ -71,6 +100,10 @@ function* watchProductTopToggle() {
   yield takeLatest(PRODUCT_TOP_TOGGLE_REQUEST, productTopToggle);
 }
 
+function* watchProductThumbnail() {
+  yield takeLatest(PRODUCT_THUMBNAIL_REQUEST, productThumbnail);
+}
+
 //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
@@ -78,6 +111,7 @@ export default function* productTypeSaga() {
   yield all([
     fork(watchProductList),
     fork(watchProductTopToggle),
+    fork(watchProductThumbnail),
     //
   ]);
 }
